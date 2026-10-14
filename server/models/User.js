@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
   {
@@ -24,7 +25,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please provide a password'],
       minlength: [6, 'Password must be at least 6 characters'],
-      select: false, // Exclude password from query results by default
+      select: false,
     },
     role: {
       type: String,
@@ -46,12 +47,15 @@ const userSchema = new mongoose.Schema(
     },
     isApproved: {
       type: Boolean,
-      default: true, // Instructors can be set to require admin approval if configured
+      default: true,
     },
     isSuspended: {
       type: Boolean,
       default: false,
     },
+    // Password reset fields
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
   {
     timestamps: true,
@@ -71,6 +75,23 @@ userSchema.pre('save', async function (next) {
 // Match user entered password to hashed password in database
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate and hash password reset token
+userSchema.methods.getResetPasswordToken = function () {
+  // Generate raw token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  // Hash and store in DB
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // Token expires in 15 minutes
+  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+
+  return resetToken; // Return raw token for email link
 };
 
 module.exports = mongoose.model('User', userSchema);

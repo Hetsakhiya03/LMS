@@ -123,9 +123,9 @@ const LoginPage = () => {
             onChange={handleChange}
             placeholder="Enter your password"
             extra={
-              <a href="#" style={{ fontSize: 12, color: '#1a8754', fontWeight: 600, textDecoration: 'none' }}>
+              <Link to="/forgot-password" style={{ fontSize: 12, color: '#1a8754', fontWeight: 600, textDecoration: 'none' }}>
                 Forgot password?
-              </a>
+              </Link>
             }
           />
 

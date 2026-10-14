@@ -10,6 +10,8 @@ import RegisterPage from './pages/RegisterPage';
 import CourseBrowsePage from './pages/CourseBrowsePage';
 import CourseDetailsPage from './pages/CourseDetailsPage';
 import VerifyCertificatePage from './pages/VerifyCertificatePage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Protected Student Pages
@@ -59,6 +61,8 @@ function App() {
           <Route path="courses" element={<CourseBrowsePage />} />
           <Route path="courses/:id" element={<CourseDetailsPage />} />
           <Route path="verify-certificate/:certificateId" element={<VerifyCertificatePage />} />
+          <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="reset-password/:token" element={<ResetPasswordPage />} />
 
           {/* Universal Dashboard Redirect Routes */}
           <Route path="dashboard" element={<DashboardRedirect />} />
