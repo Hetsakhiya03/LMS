@@ -30,6 +30,11 @@ const StudentDashboard = () => {
   const completedCourses = enrollments.filter((e) => e.progressPercentage === 100 || e.isCompleted).length;
   const inProgressCourses = totalCourses - completedCourses;
 
+  // Pick the most recently accessed course for "Continue Learning"
+  const continueEnrollment = enrollments.find((e) => e.lastAccessedLecture && e.progressPercentage < 100)
+    || enrollments.find((e) => e.progressPercentage < 100)
+    || enrollments[0];
+
   // Chart data
   const activityData = [
     { day: 'Mon', hours: 2.5 },
@@ -303,7 +308,7 @@ const StudentDashboard = () => {
               </h3>
             </div>
 
-            {enrollments.length > 0 && enrollments[0]?.course ? (
+            {enrollments.length > 0 && continueEnrollment?.course ? (
               <div style={{
                 background: '#f0fdf4',
                 border: '1px solid #d1fae5',
@@ -314,20 +319,20 @@ const StudentDashboard = () => {
                 gap: 12
               }}>
                 <span style={{ fontSize: 14, fontWeight: 700, color: '#1c1d1f' }}>
-                  {enrollments[0].course.title}
+                  {continueEnrollment.course.title}
                 </span>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#6b7280' }}>
                     <span>Course Progress</span>
-                    <strong style={{ color: '#1a8754' }}>{enrollments[0].progressPercentage}%</strong>
+                    <strong style={{ color: '#1a8754' }}>{continueEnrollment.progressPercentage}%</strong>
                   </div>
                   <div style={{ width: '100%', height: 6, borderRadius: 99, background: '#e5e7eb', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', borderRadius: 99, background: '#1a8754', width: `${enrollments[0].progressPercentage}%`, transition: 'width 0.5s ease' }} />
+                    <div style={{ height: '100%', borderRadius: 99, background: '#1a8754', width: `${continueEnrollment.progressPercentage}%`, transition: 'width 0.5s ease' }} />
                   </div>
                 </div>
 
-                <Link to={`/learning/${enrollments[0].course._id}`} style={{ textDecoration: 'none', marginTop: 4 }}>
+                <Link to={`/learning/${continueEnrollment.course._id}`} style={{ textDecoration: 'none', marginTop: 4 }}>
                   <button style={{
                     width: '100%',
                     padding: '10px 16px',

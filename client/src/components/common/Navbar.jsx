@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { GraduationCap, Search, Menu, X, LogOut, LayoutDashboard, Heart, BookOpen, ShieldCheck } from 'lucide-react';
+import { GraduationCap, Search, Menu, X, LogOut, LayoutDashboard, Heart, BookOpen, ShieldCheck, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -9,6 +10,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -18,7 +21,7 @@ const Navbar = () => {
   const isCurrent = (path) => location.pathname === path;
 
   return (
-    <header style={{ background: '#fff', borderBottom: '1px solid #e8e8e8' }} className="sticky top-0 z-50">
+    <header style={{ background: isDark ? '#1e293b' : '#fff', borderBottom: `1px solid ${isDark ? '#334155' : '#e8e8e8'}` }} className="sticky top-0 z-50">
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', height: 64, gap: 20 }}>
 
@@ -30,7 +33,7 @@ const Navbar = () => {
             }}>
               <GraduationCap size={20} color="#fff" />
             </div>
-            <span style={{ fontSize: 18, fontWeight: 800, color: '#1c1d1f', letterSpacing: '-0.3px' }}>
+            <span style={{ fontSize: 18, fontWeight: 800, color: isDark ? '#f1f5f9' : '#1c1d1f', letterSpacing: '-0.3px' }}>
               Learn<span style={{ color: '#1a8754' }}>Pulse</span>
             </span>
           </Link>
@@ -47,15 +50,15 @@ const Navbar = () => {
                 style={{
                   width: '100%',
                   padding: '9px 16px 9px 40px',
-                  border: '1px solid #d1d5db',
+                  border: `1px solid ${isDark ? '#475569' : '#d1d5db'}`,
                   borderRadius: 24,
                   fontSize: 14,
-                  color: '#1c1d1f',
-                  background: '#fff',
+                  color: isDark ? '#e2e8f0' : '#1c1d1f',
+                  background: isDark ? '#0f172a' : '#fff',
                   outline: 'none',
                 }}
                 onFocus={e => e.target.style.borderColor = '#1a8754'}
-                onBlur={e => e.target.style.borderColor = '#d1d5db'}
+                onBlur={e => e.target.style.borderColor = isDark ? '#475569' : '#d1d5db'}
               />
             </div>
           </form>
@@ -63,14 +66,14 @@ const Navbar = () => {
           {/* Nav Links */}
           <nav className="hidden lg:flex" style={{ alignItems: 'center', gap: 20 }}>
             <Link to="/courses" style={{
-              fontSize: 14, fontWeight: 500, color: location.pathname === '/courses' ? '#1a8754' : '#1c1d1f',
+              fontSize: 14, fontWeight: 500, color: location.pathname === '/courses' ? '#1a8754' : (isDark ? '#cbd5e1' : '#1c1d1f'),
               textDecoration: 'none', whiteSpace: 'nowrap'
             }}>
               Browse Courses
             </Link>
             {isAuthenticated && (
               <Link to="/wishlist" style={{
-                fontSize: 14, fontWeight: 500, color: location.pathname === '/wishlist' ? '#1a8754' : '#1c1d1f',
+                fontSize: 14, fontWeight: 500, color: location.pathname === '/wishlist' ? '#1a8754' : (isDark ? '#cbd5e1' : '#1c1d1f'),
                 textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4
               }}>
                 <Heart size={14} /> Wishlist
@@ -78,8 +81,25 @@ const Navbar = () => {
             )}
           </nav>
 
+          {/* 🌙 Dark Mode Toggle */}
+          <button
+            onClick={toggleTheme}
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: 36, height: 36, borderRadius: 8,
+              border: `1px solid ${isDark ? '#475569' : '#e5e7eb'}`,
+              background: isDark ? '#1e293b' : '#f9fafb',
+              color: isDark ? '#fbbf24' : '#6b7280',
+              cursor: 'pointer', flexShrink: 0,
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
           {/* Auth */}
-          <div className="hidden md:flex" style={{ alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
+          <div className="hidden md:flex" style={{ alignItems: 'center', gap: 8, flexShrink: 0 }}>
             {isAuthenticated ? (
               <>
                 {/* INSTRUCTOR ROLE: Provide BOTH Student Dashboard and Instructor Studio */}
