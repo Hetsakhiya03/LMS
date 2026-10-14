@@ -521,7 +521,7 @@ router.post('/seed', async (req, res) => {
       await Review.create({ course: course._id, student: student._id, rating: [4, 5, 5, 4, 5][i % 5], comment: reviewComments[i % reviewComments.length] });
       await Wishlist.create({ student: student._id, courses: [createdCourses[(i + 3) % createdCourses.length]._id, createdCourses[(i + 5) % createdCourses.length]._id] });
 
-      await Notification.create({ user: student._id, title: 'Welcome to LearnPulse! 🎉', message: `Hi ${student.name}! You have been enrolled in ${course.title}. Happy learning!`, type: 'enrollment' });
+      await Notification.create({ recipient: student._id, title: 'Welcome to LearnPulse! 🎉', message: `Hi ${student.name}! You have been enrolled in ${course.title}. Happy learning!`, type: 'enrollment' });
     }
 
     // Update student counts
